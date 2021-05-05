@@ -1,3 +1,6 @@
+const { Command } = require("commander");
+const process = require("process");
+
 const {
   listContacts,
   getContactById,
@@ -5,18 +8,19 @@ const {
   addContact,
 } = require("./contacts.js");
 
-const { Command } = require("commander");
 const program = new Command();
+
 program
-  .option("-a, --action <type>", "choose action")
-  .option("-i, --id <type>", "user id")
-  .option("-n, --name <type>", "user name")
-  .option("-e, --email <type>", "user email")
-  .option("-p, --phone <type>", "user phone");
+  .version("0.0.1")
+  .option("-a, --action <type>", "show all contacts")
+  .option("-i, --id [id]", "get contact by id")
+  .option("-n, --name [name]", "contact name", "EMPTY FIELD")
+  .option("-e, --email [email]", "contact email", "EMPTY FIELD")
+  .option("-p, --phone [phone]", "contact phone number", "EMPTY FIELD");
 
 program.parse(process.argv);
 
-const argv = program.opts();
+const options = program.opts();
 
 function invokeAction({ action, id, name, email, phone }) {
   switch (action) {
@@ -25,7 +29,7 @@ function invokeAction({ action, id, name, email, phone }) {
       break;
 
     case "get":
-      getContactById(id);
+      getContactById(Number(id));
       break;
 
     case "add":
@@ -33,7 +37,7 @@ function invokeAction({ action, id, name, email, phone }) {
       break;
 
     case "remove":
-      removeContact(id);
+      removeContact(Number(id));
       break;
 
     default:
@@ -41,4 +45,4 @@ function invokeAction({ action, id, name, email, phone }) {
   }
 }
 
-invokeAction(argv);
+invokeAction(options);
